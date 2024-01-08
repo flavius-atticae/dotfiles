@@ -1,0 +1,10 @@
+[user]
+	name = Flavius Atticae
+	email = flavien.grenier@pm.me
+	username = flavius-atticae
+
+[core]
+    editor = code --wait
+
+[init]
+    defaultBranch = main

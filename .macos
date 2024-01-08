@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# Run without downloading:
+# curl https://raw.githubusercontent.com/flavius-atticae/dotfiles/HEAD/.macos | bash
+
+echo "Hello $(whoami)! Let's get you set up."
+
+echo "mkdir -p ${HOME}/Code"
+mkdir -p "${HOME}/Code"
+
+echo "installing homebrew"
+# install homebrew https://brew.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+echo "installing nvm"
+# install nvm https://github.com/nvm-sh/nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+echo "installing latest LTS node version"
+nvm install --lts
+
+echo "node --version: $(node --version)"
+echo "npm --version: $(npm --version)"
+
+echo "installing apps with brew --cask"
+brew install --cask google-chrome visual-studio-code dash \
+vlc discord parallels protonvpn steam brave-browser
+
+echo "Generating a new SSH key for GitHub"
+ssh-keygen -t ed25519 -C "flavien.grenier@pm.me" -f ~/.ssh/id_ed25519
+eval "$(ssh-agent -s)"
+touch ~/.ssh/config
+echo "Host *\n AddKeysToAgent yes\n UseKeychain yes\n IdentityFile ~/.ssh/id_ed25519" | tee ~/.ssh/config
+ssh-add -K ~/.ssh/id_ed25519
+echo "run 'pbcopy < ~/.ssh/id_ed25519.pub' and paste that into GitHub"
+
+echo "cloning dotfiles"
+git clone git@github.com:flavius-atticae/dotfiles.git "${HOME}/dotfiles"
+ln -s "${HOME}/dotfiles/.gitconfig" "${HOME}/.gitconfig"
+
+echo "installing folderify to create custom code folder icon"
+# tutorial here: https://thisdevbrain.com/how-to-create-a-custom-macos-folder-icon/
+brew install folderify
+echo "download icon from there: https://fontawesome.com/icons/code?f=classic&s=solid"
+echo "run 'folderify /Users/flaviusatticae/Downloads/code-solid.svg'"
+
+
+printf "TODO:\n\
+install: \n\
+  Runcat (App Store) \n\
+  \n\
+uninstall:
+  folderify \n\
+  \n\
+  login to literally everything \n\
+"
